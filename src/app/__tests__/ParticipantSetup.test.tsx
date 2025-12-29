@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ParticipantSetup } from '../components/ParticipantSetup'
+import { getTopics } from '../lib/wordBank'
 
 describe('ParticipantSetup', () => {
   describe('adding participants', () => {
@@ -92,7 +93,7 @@ describe('ParticipantSetup', () => {
       expect(screen.getByRole('button', { name: /start/i })).toBeEnabled()
     })
 
-    it('calls onStart with participant count and impostor count when clicked', async () => {
+    it('calls onStart with participant count, impostor count, and topic when clicked', async () => {
       const user = userEvent.setup()
       const onStart = vi.fn()
       render(<ParticipantSetup onStart={onStart} />)
@@ -102,7 +103,46 @@ describe('ParticipantSetup', () => {
       await user.click(screen.getByRole('button', { name: /add participant/i }))
       await user.click(screen.getByRole('button', { name: /start/i }))
 
-      expect(onStart).toHaveBeenCalledWith({ participantCount: 3, impostorCount: 1 })
+      expect(onStart).toHaveBeenCalledWith({
+        participantCount: 3,
+        impostorCount: 1,
+        topicId: expect.any(String),
+      })
+    })
+  })
+
+  describe('topic selection', () => {
+    it('shows topic selector', () => {
+      render(<ParticipantSetup onStart={vi.fn()} />)
+      expect(screen.getByLabelText(/topic/i)).toBeInTheDocument()
+    })
+
+    it('allows changing topic', async () => {
+      const user = userEvent.setup()
+      const onStart = vi.fn()
+      render(<ParticipantSetup onStart={onStart} />)
+
+      // Add participants to enable start
+      for (let i = 0; i < 3; i++) {
+        await user.click(screen.getByRole('button', { name: /add participant/i }))
+      }
+
+      // Change topic
+      await user.selectOptions(screen.getByRole('combobox'), 'transportation')
+      await user.click(screen.getByRole('button', { name: /start/i }))
+
+      expect(onStart).toHaveBeenCalledWith(
+        expect.objectContaining({ topicId: 'transportation' })
+      )
+    })
+
+    it('displays all available topics from word bank', () => {
+      render(<ParticipantSetup onStart={vi.fn()} />)
+      const topics = getTopics()
+
+      topics.forEach((topic) => {
+        expect(screen.getByRole('option', { name: topic.title })).toBeInTheDocument()
+      })
     })
   })
 
@@ -136,7 +176,9 @@ describe('ParticipantSetup', () => {
       await user.click(screen.getByRole('button', { name: /increase/i }))
       await user.click(screen.getByRole('button', { name: /start/i }))
 
-      expect(onStart).toHaveBeenCalledWith({ participantCount: 6, impostorCount: 2 })
+      expect(onStart).toHaveBeenCalledWith(
+        expect.objectContaining({ participantCount: 6, impostorCount: 2 })
+      )
     })
 
     it('auto-adjusts impostor count when removing participants makes it invalid', async () => {
@@ -159,7 +201,9 @@ describe('ParticipantSetup', () => {
       // Start game - impostor count should be auto-adjusted to 1
       await user.click(screen.getByRole('button', { name: /start/i }))
 
-      expect(onStart).toHaveBeenCalledWith({ participantCount: 4, impostorCount: 1 })
+      expect(onStart).toHaveBeenCalledWith(
+        expect.objectContaining({ participantCount: 4, impostorCount: 1 })
+      )
     })
 
     it('disables start button when removing participants below minimum', async () => {

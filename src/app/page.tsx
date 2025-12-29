@@ -1,19 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { ParticipantSetup } from './components/ParticipantSetup'
 import { PlayerReveal } from './components/PlayerReveal'
-import { assignRoles, selectWord, type GameState } from './lib/gameLogic'
+import { assignRoles, type GameState } from './lib/gameLogic'
+import { selectWordFromTopic } from './lib/wordBank'
 
 type GamePhase = 'setup' | 'playing'
 
 export default function Home() {
   const [phase, setPhase] = useState<GamePhase>('setup')
   const [gameState, setGameState] = useState<GameState | null>(null)
+  const lastWordRef = useRef<string | undefined>(undefined)
 
-  const handleStart = (config: { participantCount: number; impostorCount: number }) => {
+  const handleStart = (config: { participantCount: number; impostorCount: number; topicId: string }) => {
     const roles = assignRoles(config.participantCount, config.impostorCount)
-    const word = selectWord()
+    const word = selectWordFromTopic(config.topicId, lastWordRef.current)
+
+    // Track last word to avoid repetition in next game
+    lastWordRef.current = word
 
     setGameState({
       roles,

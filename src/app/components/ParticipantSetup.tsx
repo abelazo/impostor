@@ -2,10 +2,13 @@
 
 import { useState } from 'react'
 import { ImpostorCounter } from './ImpostorCounter'
+import { TopicSelector } from './TopicSelector'
+import { getTopics } from '../lib/wordBank'
 
 interface GameConfig {
   participantCount: number
   impostorCount: number
+  topicId: string
 }
 
 interface ParticipantSetupProps {
@@ -20,6 +23,9 @@ export function ParticipantSetup({ onStart }: ParticipantSetupProps) {
   const [participants, setParticipants] = useState<number[]>([])
   const [nextId, setNextId] = useState(1)
   const [impostorCount, setImpostorCount] = useState(1)
+
+  const topics = getTopics()
+  const [topicId, setTopicId] = useState(topics[0]?.id ?? '')
 
   // Compute clamped impostor count based on current participants
   const maxImpostors = getMaxImpostors(participants.length)
@@ -47,6 +53,7 @@ export function ParticipantSetup({ onStart }: ParticipantSetupProps) {
     onStart({
       participantCount: participants.length,
       impostorCount: clampedImpostorCount,
+      topicId,
     })
   }
 
@@ -56,6 +63,8 @@ export function ParticipantSetup({ onStart }: ParticipantSetupProps) {
 
   return (
     <div className="flex flex-col gap-4">
+      <TopicSelector topics={topics} value={topicId} onChange={setTopicId} />
+
       <div className="flex items-center justify-between">
         <span className="text-lg">
           {participants.length} participant{participants.length !== 1 ? 's' : ''}
