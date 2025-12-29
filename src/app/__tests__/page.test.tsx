@@ -5,7 +5,7 @@ import Home from '../page'
 describe('Home', () => {
   it('renders the game title', () => {
     render(<Home />)
-    expect(screen.getByRole('heading', { name: /imposter game/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /impostor game/i })).toBeInTheDocument()
   })
 
   it('renders the participant setup', () => {

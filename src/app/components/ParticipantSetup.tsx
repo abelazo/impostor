@@ -12,10 +12,18 @@ interface ParticipantSetupProps {
   onStart: (config: GameConfig) => void
 }
 
+function getMaxImpostors(participantCount: number): number {
+  return Math.max(1, Math.floor(participantCount / 2) - 1)
+}
+
 export function ParticipantSetup({ onStart }: ParticipantSetupProps) {
   const [participants, setParticipants] = useState<number[]>([])
   const [nextId, setNextId] = useState(1)
   const [impostorCount, setImpostorCount] = useState(1)
+
+  // Compute clamped impostor count based on current participants
+  const maxImpostors = getMaxImpostors(participants.length)
+  const clampedImpostorCount = Math.min(Math.max(1, impostorCount), maxImpostors)
 
   const addParticipant = () => {
     if (participants.length < 10) {
@@ -25,13 +33,20 @@ export function ParticipantSetup({ onStart }: ParticipantSetupProps) {
   }
 
   const removeParticipant = (id: number) => {
-    setParticipants(participants.filter((p) => p !== id))
+    const newParticipants = participants.filter((p) => p !== id)
+    setParticipants(newParticipants)
+
+    // Clamp impostor count if it exceeds the new maximum
+    const newMaxImpostors = getMaxImpostors(newParticipants.length)
+    if (impostorCount > newMaxImpostors) {
+      setImpostorCount(newMaxImpostors)
+    }
   }
 
   const handleStart = () => {
     onStart({
       participantCount: participants.length,
-      impostorCount,
+      impostorCount: clampedImpostorCount,
     })
   }
 
@@ -72,7 +87,7 @@ export function ParticipantSetup({ onStart }: ParticipantSetupProps) {
       {showImpostorCounter && (
         <ImpostorCounter
           participantCount={participants.length}
-          value={impostorCount}
+          value={clampedImpostorCount}
           onChange={setImpostorCount}
         />
       )}

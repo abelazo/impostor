@@ -126,5 +126,48 @@ describe('ParticipantSetup', () => {
 
       expect(onStart).toHaveBeenCalledWith({ participantCount: 6, impostorCount: 2 })
     })
+
+    it('auto-adjusts impostor count when removing participants makes it invalid', async () => {
+      const user = userEvent.setup()
+      const onStart = vi.fn()
+      render(<ParticipantSetup onStart={onStart} />)
+
+      // Add 6 participants (max impostors = 2)
+      for (let i = 0; i < 6; i++) {
+        await user.click(screen.getByRole('button', { name: /add participant/i }))
+      }
+
+      // Set impostors to 2
+      await user.click(screen.getByRole('button', { name: /increase/i }))
+
+      // Remove 2 participants (now 4 participants, max impostors = 1)
+      await user.click(screen.getByRole('button', { name: /remove player 6/i }))
+      await user.click(screen.getByRole('button', { name: /remove player 5/i }))
+
+      // Start game - impostor count should be auto-adjusted to 1
+      await user.click(screen.getByRole('button', { name: /start/i }))
+
+      expect(onStart).toHaveBeenCalledWith({ participantCount: 4, impostorCount: 1 })
+    })
+
+    it('clamps impostor count to valid range when participants change', async () => {
+      const user = userEvent.setup()
+      render(<ParticipantSetup onStart={vi.fn()} />)
+
+      // Add 6 participants and set impostors to 2
+      for (let i = 0; i < 6; i++) {
+        await user.click(screen.getByRole('button', { name: /add participant/i }))
+      }
+      await user.click(screen.getByRole('button', { name: /increase/i }))
+
+      // Remove participants until only 2 remain
+      await user.click(screen.getByRole('button', { name: /remove player 6/i }))
+      await user.click(screen.getByRole('button', { name: /remove player 5/i }))
+      await user.click(screen.getByRole('button', { name: /remove player 4/i }))
+      await user.click(screen.getByRole('button', { name: /remove player 3/i }))
+
+      // With 2 participants, max is 1, so counter should show 1
+      expect(screen.getByText('1')).toBeInTheDocument()
+    })
   })
 })
