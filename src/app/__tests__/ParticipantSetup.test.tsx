@@ -57,7 +57,7 @@ describe('ParticipantSetup', () => {
   })
 
   describe('start button', () => {
-    it('disables start button with less than 2 participants', () => {
+    it('disables start button with no participants', () => {
       render(<ParticipantSetup onStart={vi.fn()} />)
       expect(screen.getByRole('button', { name: /start/i })).toBeDisabled()
     })
@@ -71,10 +71,21 @@ describe('ParticipantSetup', () => {
       expect(screen.getByRole('button', { name: /start/i })).toBeDisabled()
     })
 
-    it('enables start button with 2 or more participants', async () => {
+    it('disables start button with only 2 participants', async () => {
       const user = userEvent.setup()
       render(<ParticipantSetup onStart={vi.fn()} />)
 
+      await user.click(screen.getByRole('button', { name: /add participant/i }))
+      await user.click(screen.getByRole('button', { name: /add participant/i }))
+
+      expect(screen.getByRole('button', { name: /start/i })).toBeDisabled()
+    })
+
+    it('enables start button with 3 or more participants', async () => {
+      const user = userEvent.setup()
+      render(<ParticipantSetup onStart={vi.fn()} />)
+
+      await user.click(screen.getByRole('button', { name: /add participant/i }))
       await user.click(screen.getByRole('button', { name: /add participant/i }))
       await user.click(screen.getByRole('button', { name: /add participant/i }))
 
@@ -88,9 +99,10 @@ describe('ParticipantSetup', () => {
 
       await user.click(screen.getByRole('button', { name: /add participant/i }))
       await user.click(screen.getByRole('button', { name: /add participant/i }))
+      await user.click(screen.getByRole('button', { name: /add participant/i }))
       await user.click(screen.getByRole('button', { name: /start/i }))
 
-      expect(onStart).toHaveBeenCalledWith({ participantCount: 2, impostorCount: 1 })
+      expect(onStart).toHaveBeenCalledWith({ participantCount: 3, impostorCount: 1 })
     })
   })
 
@@ -148,6 +160,23 @@ describe('ParticipantSetup', () => {
       await user.click(screen.getByRole('button', { name: /start/i }))
 
       expect(onStart).toHaveBeenCalledWith({ participantCount: 4, impostorCount: 1 })
+    })
+
+    it('disables start button when removing participants below minimum', async () => {
+      const user = userEvent.setup()
+      render(<ParticipantSetup onStart={vi.fn()} />)
+
+      // Add 3 participants
+      for (let i = 0; i < 3; i++) {
+        await user.click(screen.getByRole('button', { name: /add participant/i }))
+      }
+
+      expect(screen.getByRole('button', { name: /start/i })).toBeEnabled()
+
+      // Remove 1 participant (now 2 participants, below minimum)
+      await user.click(screen.getByRole('button', { name: /remove player 3/i }))
+
+      expect(screen.getByRole('button', { name: /start/i })).toBeDisabled()
     })
 
     it('clamps impostor count to valid range when participants change', async () => {

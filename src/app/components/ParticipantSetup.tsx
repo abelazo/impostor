@@ -50,7 +50,7 @@ export function ParticipantSetup({ onStart }: ParticipantSetupProps) {
     })
   }
 
-  const canStart = participants.length >= 2
+  const canStart = participants.length >= 3
   const canAdd = participants.length < 10
   const showImpostorCounter = participants.length >= 2
 
