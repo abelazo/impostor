@@ -3,14 +3,13 @@ import { render, screen } from '@testing-library/react'
 import Home from '../page'
 
 describe('Home', () => {
-  it('renders the heading', () => {
+  it('renders the game title', () => {
     render(<Home />)
-    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /imposter game/i })).toBeInTheDocument()
   })
 
-  it('renders navigation links', () => {
+  it('renders the participant setup', () => {
     render(<Home />)
-    const links = screen.getAllByRole('link')
-    expect(links.length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: /add participant/i })).toBeInTheDocument()
   })
 })

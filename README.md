@@ -1,6 +1,8 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Imposter Game Web App
 
-## Getting Started
+<General description>
+
+## Development
 
 First, run the development server:
 

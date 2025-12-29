@@ -60,6 +60,7 @@ On push to `main`, GitHub Actions runs:
 - Follow Conventional Commits specification for commit messages
 - Use imperative mood (e.g., "Add feature", "Fix bug")
 - Prefix with type (feat, fix, docs, style, refactor, test, chore)
+- When linked to a User Story, scope is recommended (e.g., `feat(US-001): Add login`)
 
 ## Documentation
 
