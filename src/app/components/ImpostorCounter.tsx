@@ -8,7 +8,7 @@ interface ImpostorCounterProps {
 
 export function ImpostorCounter({ participantCount, value, onChange }: ImpostorCounterProps) {
   // Max = floor(participants/2) - 1, but at least 1
-  const maxImpostors = Math.max(1, Math.floor(participantCount / 2) - 1)
+  const maxImpostors = Math.max(1, Math.floor(participantCount / 2))
   const minImpostors = 1
 
   const canDecrease = value > minImpostors

@@ -60,22 +60,22 @@ describe('ImpostorCounter', () => {
     })
   })
 
-  describe('maximum constraint (participants/2 - 1, min 1)', () => {
+  describe('maximum constraint (participants/2, min 1)', () => {
     it('disables increase button at maximum for 4 participants (max 1)', () => {
-      // max = floor(4/2) - 1 = 1
-      render(<ImpostorCounter participantCount={4} value={1} onChange={vi.fn()} />)
+      // max = floor(4/2) = 2
+      render(<ImpostorCounter participantCount={4} value={2} onChange={vi.fn()} />)
       expect(screen.getByRole('button', { name: /increase/i })).toBeDisabled()
     })
 
     it('disables increase button at maximum for 6 participants (max 2)', () => {
-      // max = floor(6/2) - 1 = 2
-      render(<ImpostorCounter participantCount={6} value={2} onChange={vi.fn()} />)
+      // max = floor(6/2) = 3
+      render(<ImpostorCounter participantCount={6} value={3} onChange={vi.fn()} />)
       expect(screen.getByRole('button', { name: /increase/i })).toBeDisabled()
     })
 
     it('disables increase button at maximum for 10 participants (max 4)', () => {
-      // max = floor(10/2) - 1 = 4
-      render(<ImpostorCounter participantCount={10} value={4} onChange={vi.fn()} />)
+      // max = floor(10/2) = 5
+      render(<ImpostorCounter participantCount={10} value={5} onChange={vi.fn()} />)
       expect(screen.getByRole('button', { name: /increase/i })).toBeDisabled()
     })
 
@@ -85,7 +85,7 @@ describe('ImpostorCounter', () => {
     })
 
     it('ensures minimum of 1 for max with 2 participants', () => {
-      // max = floor(2/2) - 1 = 0, but clamped to 1
+      // max = floor(2/2) = 1
       render(<ImpostorCounter participantCount={2} value={1} onChange={vi.fn()} />)
       // Both buttons should be disabled (at min and max of 1)
       expect(screen.getByRole('button', { name: /decrease/i })).toBeDisabled()
