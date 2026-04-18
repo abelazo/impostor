@@ -108,7 +108,7 @@ pre-commit install
 
 Two workflows drive the pipeline:
 
-**`deploy.yml`** — triggered on push to `main`:
+**`release.yml`** — triggered on push to `main`:
 
 1. Lint (`bun run lint`)
 2. Test (`bun run test:run`)
@@ -122,11 +122,14 @@ Two workflows drive the pipeline:
 
 ### Third-party action versions
 
-Always use the **latest** major version. Do **not** downgrade. Current pinned versions:
+Always use the **latest** major version. Do **not** downgrade. **Never assume a version — always verify against the action's GitHub releases page before adding or updating an action.**
+
+Current pinned versions:
 
 | Action                          | Version |
 | ------------------------------- | ------- |
 | `actions/checkout`              | `v6`    |
+| `actions/setup-node`            | `v6`    |
 | `oven-sh/setup-bun`             | `v2`    |
 | `actions/configure-pages`       | `v6`    |
 | `actions/upload-pages-artifact` | `v5`    |
