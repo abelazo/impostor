@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **Keep this file up to date.** Update CLAUDE.md whenever the project structure, architecture, tech stack, commands, or workflow changes (e.g. adding a new dependency, reorganizing directories, changing CI steps, or introducing a new pattern).
+
+## Project Overview
+
+"Impostor Game" is a browser-based party game assistant. Players take turns being shown their role (civilian or impostor) along with a secret word on a shared device, without the others seeing. The game then plays out verbally among participants.
+
+Key behaviours:
+- Word bank loaded remotely from a YAML file (GitHub raw URL) and cached in memory
+- Last-used word is excluded from the next random draw to avoid immediate repetition
+- Game setup (participant count, impostor count, topic) persisted in `localStorage` and restored on next session
+- Min 3 / max 10 participants; impostor count capped at half the participant count
+
 ## Commands
 
 ```bash
@@ -25,10 +37,35 @@ This is a Next.js 16 web application using:
 
 ```
 src/app/
-├── layout.tsx       # Root layout (wraps all pages)
-├── page.tsx         # Home page (/)
-├── globals.css      # Global styles and Tailwind imports
-└── __tests__/       # Test files
+├── layout.tsx                    # Root layout (wraps all pages)
+├── page.tsx                      # Home page — game orchestrator (loading → setup → playing phases)
+├── globals.css                   # Global styles and Tailwind imports
+├── components/
+│   ├── ParticipantSetup.tsx      # Setup screen: participant list, topic, impostor count, start button
+│   ├── PlayerReveal.tsx          # Per-player role reveal screen (shown one player at a time)
+│   ├── ImpostorCounter.tsx       # +/- control for choosing how many impostors
+│   └── TopicSelector.tsx         # Dropdown for selecting a word-bank topic
+├── lib/
+│   ├── gameLogic.ts              # Role assignment and shuffle logic
+│   ├── gameSettings.ts           # localStorage persistence of last game config
+│   └── wordBank.ts               # Remote YAML word-bank loader, topic listing, word selection
+└── __tests__/                    # Vitest + React Testing Library test files
+```
+
+### Word Bank
+
+The word bank lives in `word-bank/es.yaml` (checked into the repo) and is served from GitHub's raw CDN at runtime:
+
+```
+https://raw.githubusercontent.com/abelazo/impostor/refs/heads/main/word-bank/es.yaml
+```
+
+Format:
+```yaml
+topics:
+  <topicId>:
+    title: "Display Name"
+    words: [word1, word2, ...]
 ```
 
 ### Key Patterns
@@ -38,6 +75,7 @@ src/app/
 - Use `'use client'` directive for client-side interactivity (onClick, useState, etc.)
 - Server Components (default) can directly fetch data without useEffect
 - Import alias `@/*` maps to `src/*`
+- The whole app is a single client-side page; there is currently no server-side logic or API routes
 
 ## TDD Workflow
 
