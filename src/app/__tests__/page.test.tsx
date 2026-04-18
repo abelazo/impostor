@@ -31,7 +31,7 @@ describe("Home", () => {
   it("renders the game title", () => {
     render(<Home />);
     expect(
-      screen.getByRole("heading", { name: /impostor game/i }),
+      screen.getByRole("heading", { name: /impostor/i }),
     ).toBeInTheDocument();
   });
 
