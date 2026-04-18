@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Abelazo's Impostor Game",
+  title: "Impostor",
   description: "Impostor Game by Abelazo",
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { GitHubIndicator } from "./components/GitHubIndicator";
 import { ParticipantSetup } from "./components/ParticipantSetup";
 import { PlayerReveal } from "./components/PlayerReveal";
 import {
@@ -77,9 +78,15 @@ export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4 dark:bg-black">
       <main className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg dark:bg-zinc-900">
-        <h1 className="mb-6 text-center text-2xl font-bold text-zinc-900 dark:text-white">
-          Abelazo&apos;s Impostor Game
-        </h1>
+        <div className="mb-6 flex items-center justify-center gap-4">
+          <h1 className="text-center text-2xl font-bold text-zinc-900 dark:text-white">
+            Impostor
+          </h1>
+          <GitHubIndicator
+            repo="abelazo/impostor"
+            version={process.env.NEXT_PUBLIC_APP_VERSION}
+          />
+        </div>
 
         {phase === "loading" && (
           <div className="text-center text-zinc-600 dark:text-zinc-400">
