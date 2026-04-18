@@ -147,7 +147,46 @@ describe("ParticipantSetup", () => {
         participantCount: 3,
         impostorCount: 1,
         topicId: expect.any(String),
+        randomImpostorCount: false,
       });
+    });
+  });
+
+  describe("random impostor count", () => {
+    it("passes randomImpostorCount: false by default", async () => {
+      const user = userEvent.setup();
+      const onStart = vi.fn();
+      render(<ParticipantSetup onStart={onStart} wordBank={mockWordBank} />);
+
+      for (let i = 0; i < 3; i++) {
+        await user.click(
+          screen.getByRole("button", { name: /add participant/i }),
+        );
+      }
+      await user.click(screen.getByRole("button", { name: /start/i }));
+
+      expect(onStart).toHaveBeenCalledWith(
+        expect.objectContaining({ randomImpostorCount: false }),
+      );
+    });
+
+    it("passes randomImpostorCount: true when checkbox is checked", async () => {
+      const user = userEvent.setup();
+      const onStart = vi.fn();
+      render(<ParticipantSetup onStart={onStart} wordBank={mockWordBank} />);
+
+      for (let i = 0; i < 4; i++) {
+        await user.click(
+          screen.getByRole("button", { name: /add participant/i }),
+        );
+      }
+
+      await user.click(screen.getByRole("checkbox", { name: /random/i }));
+      await user.click(screen.getByRole("button", { name: /start/i }));
+
+      expect(onStart).toHaveBeenCalledWith(
+        expect.objectContaining({ randomImpostorCount: true }),
+      );
     });
   });
 

@@ -10,6 +10,7 @@ interface GameConfig {
   participantCount: number;
   impostorCount: number;
   topicId: string;
+  randomImpostorCount: boolean;
 }
 
 interface ParticipantSetupProps {
@@ -35,6 +36,7 @@ function getInitialState(topics: { id: string }[]) {
       nextId: clampedCount + 1,
       impostorCount: saved.impostorCount,
       topicId: topicExists ? saved.topicId : (topics[0]?.id ?? ""),
+      randomImpostorCount: saved.randomImpostorCount ?? false,
     };
   }
   return {
@@ -42,6 +44,7 @@ function getInitialState(topics: { id: string }[]) {
     nextId: 1,
     impostorCount: 1,
     topicId: topics[0]?.id ?? "",
+    randomImpostorCount: false,
   };
 }
 
@@ -57,6 +60,9 @@ export function ParticipantSetup({ onStart, wordBank }: ParticipantSetupProps) {
     initialState.impostorCount,
   );
   const [topicId, setTopicId] = useState(initialState.topicId);
+  const [randomImpostorCount, setRandomImpostorCount] = useState(
+    initialState.randomImpostorCount,
+  );
 
   // Compute clamped impostor count based on current participants
   const maxImpostors = getMaxImpostors(participants.length);
@@ -88,6 +94,7 @@ export function ParticipantSetup({ onStart, wordBank }: ParticipantSetupProps) {
       participantCount: participants.length,
       impostorCount: clampedImpostorCount,
       topicId,
+      randomImpostorCount,
     };
     saveGameSettings(config);
     onStart(config);
@@ -138,6 +145,8 @@ export function ParticipantSetup({ onStart, wordBank }: ParticipantSetupProps) {
           participantCount={participants.length}
           value={clampedImpostorCount}
           onChange={setImpostorCount}
+          randomImpostorCount={randomImpostorCount}
+          onRandomImpostorCountChange={setRandomImpostorCount}
         />
       )}
 

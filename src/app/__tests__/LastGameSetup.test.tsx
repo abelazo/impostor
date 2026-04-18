@@ -86,6 +86,7 @@ describe("Last Game Setup Persistence", () => {
         participantCount: 5,
         impostorCount: 1,
         topicId: "food",
+        randomImpostorCount: false,
       });
     });
 

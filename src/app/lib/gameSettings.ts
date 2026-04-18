@@ -4,6 +4,7 @@ export interface GameSettings {
   participantCount: number;
   impostorCount: number;
   topicId: string;
+  randomImpostorCount?: boolean;
 }
 
 export function saveGameSettings(settings: GameSettings): void {

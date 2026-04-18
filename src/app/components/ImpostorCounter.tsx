@@ -4,12 +4,16 @@ interface ImpostorCounterProps {
   participantCount: number;
   value: number;
   onChange: (count: number) => void;
+  randomImpostorCount?: boolean;
+  onRandomImpostorCountChange?: (value: boolean) => void;
 }
 
 export function ImpostorCounter({
   participantCount,
   value,
   onChange,
+  randomImpostorCount = false,
+  onRandomImpostorCountChange,
 }: ImpostorCounterProps) {
   const maxImpostors = Math.max(1, Math.floor(participantCount / 2));
   const minImpostors = 1;
@@ -30,29 +34,44 @@ export function ImpostorCounter({
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <label id="impostor-label" className="text-lg">
-        Impostors
-      </label>
-      <div className="flex items-center gap-3" aria-labelledby="impostor-label">
-        <button
-          onClick={handleDecrease}
-          disabled={!canDecrease}
-          aria-label="Decrease impostors"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-xl font-bold hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-700 dark:hover:bg-zinc-600"
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <label id="impostor-label" className="text-lg">
+          Impostors
+        </label>
+        <div
+          className="flex items-center gap-3"
+          aria-labelledby="impostor-label"
         >
-          -
-        </button>
-        <span className="w-8 text-center text-xl font-semibold">{value}</span>
-        <button
-          onClick={handleIncrease}
-          disabled={!canIncrease}
-          aria-label="Increase impostors"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-xl font-bold hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-700 dark:hover:bg-zinc-600"
-        >
-          +
-        </button>
+          <button
+            onClick={handleDecrease}
+            disabled={!canDecrease}
+            aria-label="Decrease impostors"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-xl font-bold hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-700 dark:hover:bg-zinc-600"
+          >
+            -
+          </button>
+          <span className="w-8 text-center text-xl font-semibold">{value}</span>
+          <button
+            onClick={handleIncrease}
+            disabled={!canIncrease}
+            aria-label="Increase impostors"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-xl font-bold hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-700 dark:hover:bg-zinc-600"
+          >
+            +
+          </button>
+        </div>
       </div>
+      <label className="flex items-center gap-2 self-end text-sm text-zinc-600 dark:text-zinc-400">
+        <input
+          type="checkbox"
+          checked={randomImpostorCount}
+          onChange={(e) => onRandomImpostorCountChange?.(e.target.checked)}
+          aria-label="Random impostor count"
+          className="h-4 w-4 cursor-pointer"
+        />
+        Random (1–{value})
+      </label>
     </div>
   );
 }

@@ -26,6 +26,10 @@ export function assignRoles(
   }));
 }
 
+export function randomizeImpostorCount(max: number): number {
+  return Math.floor(Math.random() * max) + 1;
+}
+
 function shuffleArray<T>(array: T[]): void {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

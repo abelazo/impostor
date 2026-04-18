@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { assignRoles, type GameState } from "../lib/gameLogic";
+import {
+  assignRoles,
+  randomizeImpostorCount,
+  type GameState,
+} from "../lib/gameLogic";
 
 describe("gameLogic", () => {
   describe("assignRoles", () => {
@@ -35,6 +39,28 @@ describe("gameLogic", () => {
         results.add(impostorIndex.toString());
       }
       // Should have different positions across runs
+      expect(results.size).toBeGreaterThan(1);
+    });
+  });
+
+  describe("randomizeImpostorCount", () => {
+    it("returns 1 when max is 1", () => {
+      expect(randomizeImpostorCount(1)).toBe(1);
+    });
+
+    it("always returns a value between 1 and max inclusive", () => {
+      for (let i = 0; i < 50; i++) {
+        const result = randomizeImpostorCount(3);
+        expect(result).toBeGreaterThanOrEqual(1);
+        expect(result).toBeLessThanOrEqual(3);
+      }
+    });
+
+    it("returns varied results across calls", () => {
+      const results = new Set<number>();
+      for (let i = 0; i < 50; i++) {
+        results.add(randomizeImpostorCount(5));
+      }
       expect(results.size).toBeGreaterThan(1);
     });
   });

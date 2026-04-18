@@ -3,7 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { ParticipantSetup } from "./components/ParticipantSetup";
 import { PlayerReveal } from "./components/PlayerReveal";
-import { assignRoles, type GameState } from "./lib/gameLogic";
+import {
+  assignRoles,
+  randomizeImpostorCount,
+  type GameState,
+} from "./lib/gameLogic";
 import { loadWordBank, type WordBank } from "./lib/wordBank";
 
 type GamePhase = "loading" | "setup" | "playing";
@@ -25,10 +29,14 @@ export default function Home() {
     participantCount: number;
     impostorCount: number;
     topicId: string;
+    randomImpostorCount: boolean;
   }) => {
     if (!wordBank) return;
 
-    const roles = assignRoles(config.participantCount, config.impostorCount);
+    const effectiveImpostorCount = config.randomImpostorCount
+      ? randomizeImpostorCount(config.impostorCount)
+      : config.impostorCount;
+    const roles = assignRoles(config.participantCount, effectiveImpostorCount);
     const word = wordBank.selectWordFromTopic(
       config.topicId,
       lastWordRef.current,

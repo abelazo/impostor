@@ -74,6 +74,83 @@ describe("ImpostorCounter", () => {
     });
   });
 
+  describe("random impostor count checkbox", () => {
+    it("shows a random checkbox", () => {
+      render(
+        <ImpostorCounter
+          participantCount={6}
+          value={2}
+          onChange={vi.fn()}
+          randomImpostorCount={false}
+          onRandomImpostorCountChange={vi.fn()}
+        />,
+      );
+      expect(
+        screen.getByRole("checkbox", { name: /random/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("checkbox is unchecked when randomImpostorCount is false", () => {
+      render(
+        <ImpostorCounter
+          participantCount={6}
+          value={2}
+          onChange={vi.fn()}
+          randomImpostorCount={false}
+          onRandomImpostorCountChange={vi.fn()}
+        />,
+      );
+      expect(
+        screen.getByRole("checkbox", { name: /random/i }),
+      ).not.toBeChecked();
+    });
+
+    it("checkbox is checked when randomImpostorCount is true", () => {
+      render(
+        <ImpostorCounter
+          participantCount={6}
+          value={2}
+          onChange={vi.fn()}
+          randomImpostorCount={true}
+          onRandomImpostorCountChange={vi.fn()}
+        />,
+      );
+      expect(screen.getByRole("checkbox", { name: /random/i })).toBeChecked();
+    });
+
+    it("calls onRandomImpostorCountChange(true) when checkbox is checked", async () => {
+      const user = userEvent.setup();
+      const onRandomImpostorCountChange = vi.fn();
+      render(
+        <ImpostorCounter
+          participantCount={6}
+          value={2}
+          onChange={vi.fn()}
+          randomImpostorCount={false}
+          onRandomImpostorCountChange={onRandomImpostorCountChange}
+        />,
+      );
+      await user.click(screen.getByRole("checkbox", { name: /random/i }));
+      expect(onRandomImpostorCountChange).toHaveBeenCalledWith(true);
+    });
+
+    it("calls onRandomImpostorCountChange(false) when checkbox is unchecked", async () => {
+      const user = userEvent.setup();
+      const onRandomImpostorCountChange = vi.fn();
+      render(
+        <ImpostorCounter
+          participantCount={6}
+          value={2}
+          onChange={vi.fn()}
+          randomImpostorCount={true}
+          onRandomImpostorCountChange={onRandomImpostorCountChange}
+        />,
+      );
+      await user.click(screen.getByRole("checkbox", { name: /random/i }));
+      expect(onRandomImpostorCountChange).toHaveBeenCalledWith(false);
+    });
+  });
+
   describe("maximum constraint (participants/2, min 1)", () => {
     it("disables increase button at maximum for 4 participants (max 1)", () => {
       // max = floor(4/2) = 2
