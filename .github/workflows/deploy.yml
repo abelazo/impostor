@@ -1,20 +1,13 @@
-name: Deploy to GitHub Pages
+name: CI & Release
 
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - docs/**
-  workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   lint:
@@ -39,19 +32,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: oven-sh/setup-bun@v2
-      - uses: actions/configure-pages@v6
       - run: bun install
       - run: bun run build
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: ./out
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  release:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v5
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bunx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

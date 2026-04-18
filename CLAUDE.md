@@ -106,11 +106,31 @@ pre-commit install
 
 ## CI/CD
 
-On push to `main`, GitHub Actions runs:
+Two workflows drive the pipeline:
+
+**`deploy.yml`** — triggered on push to `main`:
 
 1. Lint (`bun run lint`)
 2. Test (`bun run test:run`)
-3. Build and deploy to GitHub Pages
+3. Build
+4. Semantic release (creates a GitHub release from conventional commits)
+
+**`pages.yml`** — triggered on GitHub release published:
+
+1. Build
+2. Deploy to GitHub Pages
+
+### Third-party action versions
+
+Always use the **latest** major version. Do **not** downgrade. Current pinned versions:
+
+| Action                          | Version |
+| ------------------------------- | ------- |
+| `actions/checkout`              | `v6`    |
+| `oven-sh/setup-bun`             | `v2`    |
+| `actions/configure-pages`       | `v6`    |
+| `actions/upload-pages-artifact` | `v5`    |
+| `actions/deploy-pages`          | `v5`    |
 
 ## Commits
 
