@@ -170,15 +170,15 @@ describe("Last Game Setup Persistence", () => {
     it("clamps loaded participant count to valid range", async () => {
       // Save with too many participants
       saveGameSettings({
-        participantCount: 15, // Max is 10
+        participantCount: 25, // Max is 20
         impostorCount: 1,
         topicId: "daily-life",
       });
 
       render(<ParticipantSetup onStart={vi.fn()} wordBank={mockWordBank} />);
 
-      // Should show max 10 participants
-      expect(screen.getByText(/10 participants/i)).toBeInTheDocument();
+      // Should show max 20 participants
+      expect(screen.getByText(/20 participants/i)).toBeInTheDocument();
     });
 
     it("handles zero participant count gracefully", async () => {

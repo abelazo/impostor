@@ -25,7 +25,7 @@ function getMaxImpostors(participantCount: number): number {
 function getInitialState(topics: { id: string }[]) {
   const saved = loadGameSettings();
   if (saved) {
-    const clampedCount = Math.min(Math.max(0, saved.participantCount), 10);
+    const clampedCount = Math.min(Math.max(0, saved.participantCount), 20);
     const ids =
       clampedCount > 0
         ? Array.from({ length: clampedCount }, (_, i) => i + 1)
@@ -72,7 +72,7 @@ export function ParticipantSetup({ onStart, wordBank }: ParticipantSetupProps) {
   );
 
   const addParticipant = () => {
-    if (participants.length < 10) {
+    if (participants.length < 20) {
       setParticipants([...participants, nextId]);
       setNextId(nextId + 1);
     }
@@ -101,7 +101,7 @@ export function ParticipantSetup({ onStart, wordBank }: ParticipantSetupProps) {
   };
 
   const canStart = participants.length >= 3;
-  const canAdd = participants.length < 10;
+  const canAdd = participants.length < 20;
   const showImpostorCounter = participants.length >= 2;
 
   return (

@@ -44,12 +44,12 @@ describe("ParticipantSetup", () => {
       expect(screen.getByText(/2 participants/i)).toBeInTheDocument();
     });
 
-    it("limits maximum participants to 10", async () => {
+    it("limits maximum participants to 20", async () => {
       const user = userEvent.setup();
       render(<ParticipantSetup onStart={vi.fn()} wordBank={mockWordBank} />);
 
-      // Add 10 participants
-      for (let i = 0; i < 10; i++) {
+      // Add 20 participants
+      for (let i = 0; i < 20; i++) {
         await user.click(
           screen.getByRole("button", { name: /add participant/i }),
         );

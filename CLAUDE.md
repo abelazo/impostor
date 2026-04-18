@@ -13,7 +13,7 @@ Key behaviours:
 - Word bank loaded remotely from a YAML file (GitHub raw URL) and cached in memory
 - Last-used word is excluded from the next random draw to avoid immediate repetition
 - Game setup (participant count, impostor count, topic) persisted in `localStorage` and restored on next session
-- Min 3 / max 10 participants; impostor count capped at half the participant count
+- Min 3 / max 20 participants; impostor count capped at half the participant count
 
 ## Commands
 
