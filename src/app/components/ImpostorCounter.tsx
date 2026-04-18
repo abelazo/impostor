@@ -1,29 +1,33 @@
-'use client'
+"use client";
 
 interface ImpostorCounterProps {
-  participantCount: number
-  value: number
-  onChange: (count: number) => void
+  participantCount: number;
+  value: number;
+  onChange: (count: number) => void;
 }
 
-export function ImpostorCounter({ participantCount, value, onChange }: ImpostorCounterProps) {
-  const maxImpostors = Math.max(1, Math.floor(participantCount / 2))
-  const minImpostors = 1
+export function ImpostorCounter({
+  participantCount,
+  value,
+  onChange,
+}: ImpostorCounterProps) {
+  const maxImpostors = Math.max(1, Math.floor(participantCount / 2));
+  const minImpostors = 1;
 
-  const canDecrease = value > minImpostors
-  const canIncrease = value < maxImpostors
+  const canDecrease = value > minImpostors;
+  const canIncrease = value < maxImpostors;
 
   const handleDecrease = () => {
     if (canDecrease) {
-      onChange(value - 1)
+      onChange(value - 1);
     }
-  }
+  };
 
   const handleIncrease = () => {
     if (canIncrease) {
-      onChange(value + 1)
+      onChange(value + 1);
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -50,5 +54,5 @@ export function ImpostorCounter({ participantCount, value, onChange }: ImpostorC
         </button>
       </div>
     </div>
-  )
+  );
 }

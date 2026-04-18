@@ -9,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 "Impostor Game" is a browser-based party game assistant. Players take turns being shown their role (civilian or impostor) along with a secret word on a shared device, without the others seeing. The game then plays out verbally among participants.
 
 Key behaviours:
+
 - Word bank loaded remotely from a YAML file (GitHub raw URL) and cached in memory
 - Last-used word is excluded from the next random draw to avoid immediate repetition
 - Game setup (participant count, impostor count, topic) persisted in `localStorage` and restored on next session
@@ -28,6 +29,7 @@ bun run test:run  # Run tests once
 ## Architecture
 
 This is a Next.js 16 web application using:
+
 - **App Router** (`src/app/`) - File-based routing with React Server Components by default
 - **TypeScript** - Strict type checking enabled
 - **Tailwind CSS v4** - Utility-first styling via `@tailwindcss/postcss`
@@ -61,6 +63,7 @@ https://raw.githubusercontent.com/abelazo/impostor/refs/heads/main/word-bank/es.
 ```
 
 Format:
+
 ```yaml
 topics:
   <topicId>:
@@ -80,15 +83,31 @@ topics:
 ## TDD Workflow
 
 Follow Test-Driven Development:
+
 1. Write a failing test first (`bun run test`)
 2. Write minimal code to make it pass
 3. Refactor while keeping tests green
 
 Test files go in `__tests__/` directories with `.test.tsx` extension.
 
+## Pre-commit Hooks
+
+Pre-commit hooks are driven by `.pre-commit-config.yaml`. Active hooks:
+
+- **trailing-whitespace**, **end-of-file-fixer**, **mixed-line-ending**, **check-case-conflict**, **check-merge-conflict** — general file hygiene
+- **prettier** — code formatting (runs on staged files)
+- **commitizen** — enforces Conventional Commits on commit messages
+
+To install hooks locally:
+
+```bash
+pre-commit install
+```
+
 ## CI/CD
 
 On push to `main`, GitHub Actions runs:
+
 1. Lint (`bun run lint`)
 2. Test (`bun run test:run`)
 3. Build and deploy to GitHub Pages

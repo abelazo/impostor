@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 
 interface PlayerRevealProps {
-  playerNumber: number
-  isImpostor: boolean
-  word: string
-  onNext: () => void
-  isLastPlayer: boolean
+  playerNumber: number;
+  isImpostor: boolean;
+  word: string;
+  onNext: () => void;
+  isLastPlayer: boolean;
 }
 
 export function PlayerReveal({
@@ -17,11 +17,11 @@ export function PlayerReveal({
   onNext,
   isLastPlayer,
 }: PlayerRevealProps) {
-  const [isRevealed, setIsRevealed] = useState(false)
+  const [isRevealed, setIsRevealed] = useState(false);
 
   const handleReveal = () => {
-    setIsRevealed(true)
-  }
+    setIsRevealed(true);
+  };
 
   return (
     <div className="flex flex-col items-center gap-6 text-center">
@@ -50,10 +50,10 @@ export function PlayerReveal({
             onClick={onNext}
             className="rounded-full bg-green-600 px-8 py-4 text-lg font-semibold text-white hover:bg-green-700"
           >
-            {isLastPlayer ? 'Start Again' : 'Got it!'}
+            {isLastPlayer ? "Start Again" : "Got it!"}
           </button>
         </>
       )}
     </div>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import type { Topic } from '../lib/wordBank'
+import type { Topic } from "../lib/wordBank";
 
 interface TopicSelectorProps {
-  topics: Topic[]
-  value: string
-  onChange: (topicId: string) => void
+  topics: Topic[];
+  value: string;
+  onChange: (topicId: string) => void;
 }
 
 export function TopicSelector({ topics, value, onChange }: TopicSelectorProps) {
@@ -27,5 +27,5 @@ export function TopicSelector({ topics, value, onChange }: TopicSelectorProps) {
         ))}
       </select>
     </div>
-  )
+  );
 }
