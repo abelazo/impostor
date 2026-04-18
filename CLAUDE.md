@@ -106,7 +106,7 @@ pre-commit install
 
 ## CI/CD
 
-Two workflows drive the pipeline:
+One workflow drives the pipeline:
 
 **`release.yml`** — triggered on push to `main`:
 
@@ -114,11 +114,9 @@ Two workflows drive the pipeline:
 2. Test (`bun run test:run`)
 3. Build
 4. Semantic release (creates a GitHub release from conventional commits)
+5. Deploy to GitHub Pages
 
-**`pages.yml`** — triggered on GitHub release published:
-
-1. Build
-2. Deploy to GitHub Pages
+> **Why a single workflow?** GitHub Actions does not trigger downstream workflows when `GITHUB_TOKEN` is used to create events (e.g. a release). Keeping deployment in the same workflow avoids this restriction without requiring a Personal Access Token.
 
 ### Third-party action versions
 
@@ -134,6 +132,8 @@ Current pinned versions:
 | `actions/configure-pages`       | `v6`    |
 | `actions/upload-pages-artifact` | `v5`    |
 | `actions/deploy-pages`          | `v5`    |
+
+> When adding a new action, always verify the latest version at `https://github.com/<owner>/<action>/releases/latest` before writing it into a workflow. Never use a version from memory.
 
 ## Commits
 

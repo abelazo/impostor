@@ -8,6 +8,12 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   lint:
@@ -50,3 +56,21 @@ jobs:
       - run: bunx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-pages:
+    runs-on: ubuntu-latest
+    needs: release
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/configure-pages@v6
+      - run: bun install
+      - run: bun run build
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./out
+      - id: deployment
+        uses: actions/deploy-pages@v5
